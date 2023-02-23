@@ -190,17 +190,18 @@ function M.hovehandler(markdown_lines, opts)
   opts.width = math.min(maxstrwidth + opts.padding, opts.max_width)
 
 
-  local tfn = os.tmpname()
-  local tf = io.open(tfn, 'w')
-  tf:write(lines)
-  tf:flush()
-  local cmd = string.format("%s -w %d -s %s %s", opts.glow_path, opts.width,
-    colorscheme, tfn)
+  --local tfn = os.tmpname()
+  --local tf = io.open(tfn, 'w')
+  --tf:write(lines)
+  --tf:flush()
+  local cmd = string.format("echo %s | %s -w %d -s %s", lines , opts.glow_path, opts.width,
+    colorscheme)
   local handle = io.popen(cmd)
-  local rendered = handle:read("*a")
+  handle.flush()
+  local rendered = handle:read("*all")
   handle:close()
-  tf:close()
-  os.remove(tfn)
+  --tf:close()
+  --os.remove(tfn)
 
   local renderedLines = {}
   for line in rendered:gmatch("([^\n]*)\n?") do
